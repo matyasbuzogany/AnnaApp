@@ -1,0 +1,479 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #faf8f5;
+  --surface:   #ffffff;
+  --border:    #e8e0d6;
+  --accent:    #c07a3a;
+  --accent-dk: #9e6028;
+  --text:      #2c2416;
+  --muted:     #7d6f5e;
+  --radius:    10px;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0 0 60px;
+}
+
+/* ── Header ── */
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+header .logo {
+  width: 40px; height: 40px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 20px; flex-shrink: 0;
+}
+header h1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+header p {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+/* ── Tab navigation ── */
+.tabs {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 0;
+  padding: 0 32px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  color: var(--accent-dk);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Tab panels ── */
+.tab-panel {
+  display: none;
+  max-width: 760px;
+  margin: 36px auto 0;
+  padding: 0 20px;
+}
+.tab-panel.active { display: block; }
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.card-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.card-title-sub {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.75rem;
+}
+
+/* ── Dropdown ── */
+.select-wrapper {
+  position: relative;
+}
+.select-wrapper::after {
+  content: "▾";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  font-size: 13px;
+}
+select {
+  width: 100%;
+  appearance: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 40px 11px 14px;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ── Mass input ── */
+.mass-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+input[type="number"] {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  color: var(--text);
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input[type="number"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.unit-badge {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ── Search box (prices tab) ── */
+.search-wrapper input[type="search"] {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.search-wrapper input[type="search"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ── Recipe meta line ── */
+.recipe-meta {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 10px;
+  min-height: 18px;
+}
+.recipe-meta strong { color: var(--accent-dk); }
+
+/* ── Results card ── */
+#results { display: none; }
+#results.visible { display: block; }
+
+.results-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.results-header h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* ── Tables (shared) ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead tr {
+  border-bottom: 2px solid var(--border);
+}
+th {
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 0 10px;
+}
+th:last-child, td:last-child,
+th:nth-child(2) { text-align: right; }
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--bg); }
+td {
+  padding: 11px 0;
+  font-size: 0.9rem;
+}
+td:first-child { color: var(--text); }
+
+/* ── Quantity + price columns ── */
+td:nth-child(2) {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-dk);
+}
+.col-prix {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding-left: 16px;
+}
+th.col-prix { padding-left: 16px; }
+.col-prix.hidden, th.col-prix.hidden { display: none; }
+.no-price { color: var(--border); }
+
+/* ── Total row ── */
+tfoot .total-row {
+  border-top: 2px solid var(--border);
+}
+tfoot .total-row td {
+  padding-top: 13px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+tfoot .total-row td:nth-child(2) {
+  color: var(--accent-dk);
+  font-size: 1rem;
+}
+tfoot .total-row .col-prix {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-dk);
+}
+
+/* ── Price input (prices tab) ── */
+.price-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.price-input {
+  width: 90px;
+  text-align: right;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.9rem;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.price-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.price-unit {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* readonly state */
+.price-input[readonly] {
+  background: transparent;
+  border-color: transparent;
+  color: var(--accent-dk);
+  cursor: default;
+}
+
+.modify-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.modify-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-dk);
+}
+.modify-btn.confirm-btn {
+  border-color: var(--accent);
+  color: var(--accent-dk);
+  background: #fdf3ea;
+}
+
+/* ── Assembly tab ── */
+.assembly-add-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.assembly-mass-field {
+  width: 140px;
+  flex-shrink: 0;
+}
+.add-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 11px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.add-btn:hover { background: var(--accent-dk); }
+.add-btn:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: default;
+}
+
+/* remove button in assembly list */
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.remove-btn:hover { color: #c0392b; }
+
+/* assembly list: mass column */
+#assemblyListTable td:nth-child(2) {
+  width: 120px;
+}
+/* remove column: narrow, no right-align override */
+#assemblyListTable th:last-child,
+#assemblyListTable td:last-child {
+  text-align: center;
+  width: 36px;
+}
+
+/* ── Empty state ── */
+.empty {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.empty .icon { font-size: 2rem; margin-bottom: 10px; }
+
+/* ── Mobile responsive ── */
+@media (max-width: 600px) {
+
+  /* Header */
+  header {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+  header h1 { font-size: 1.1rem; }
+  header p  { font-size: 0.75rem; }
+
+  /* Tabs: shrink padding, let them scroll horizontally if needed */
+  .tabs {
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-btn {
+    padding: 12px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  /* Tab panels */
+  .tab-panel {
+    margin-top: 20px;
+    padding: 0 12px;
+  }
+
+  /* Cards */
+  .card {
+    padding: 18px 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+  }
+
+  /* Assembly add-row: stack vertically on small screens */
+  .assembly-add-row {
+    flex-wrap: wrap;
+  }
+  .assembly-add-row .select-wrapper {
+    flex: 1 1 100%;   /* full width on its own line */
+  }
+  .assembly-mass-field {
+    flex: 1 1 0;
+    width: auto;
+  }
+  .add-btn {
+    flex-shrink: 0;
+  }
+
+  /* Prices table: tighten ingredient name column, shrink input */
+  .price-input { width: 70px; }
+  .price-unit  { display: none; } /* reclaim space on mobile */
+
+  /* Recipe/assembly results table:
+     hide the prix column label on very small screens if needed,
+     tighten cell padding */
+  td, th { padding-left: 0; padding-right: 0; }
+  td { padding-top: 9px; padding-bottom: 9px; }
+  .col-prix { padding-left: 10px; }
+  th.col-prix { padding-left: 10px; }
+
+  /* Slightly smaller font in table body */
+  td { font-size: 0.83rem; }
+  tfoot .total-row td { font-size: 0.92rem; }
+
+  /* Touch-friendly tap targets for buttons */
+  .remove-btn  { padding: 6px 8px; font-size: 1rem; }
+  .modify-btn  { padding: 6px 10px; }
+}

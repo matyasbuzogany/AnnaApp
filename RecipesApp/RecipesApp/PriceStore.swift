@@ -1,0 +1,146 @@
+import Foundation
+import Combine
+
+// MARK: - PriceStore
+/// Persists ingredient prices (€/kg) in UserDefaults.
+/// Injected as an environment object so all tabs share the same prices.
+final class PriceStore: ObservableObject {
+
+    // Published dictionary: ingredient name → price per kg (€)
+    @Published private(set) var prices: [String: Double]
+
+    private let key = "patisserie_prices_v2"
+
+    // MARK: Default prices (€/kg)
+    static let defaults: [String: Double] = [
+        "Abricot frais": 4.50,
+        "Agar agar": 18.00,
+                        "Amandes effilées": 16.00,
+        "Beurre": 8.50,
+        "Beurre demi-sel": 9.00,
+        "Beurre fondu": 8.50,
+        "Beurre noisette": 9.00,
+        "Blanc d'oeuf": 4.00,
+                        "Brioche": 6.00,
+        "Cacao en poudre": 22.00,
+        "Carambar": 12.00,
+        "Cassonade": 2.50,
+        "Chocolat au lait": 16.00,
+        "Chocolat blanc": 14.00,
+        "Chocolat noir": 18.00,
+        "Chocolat noir 65%": 20.00,
+        "Coco râpée torréfiée": 8.00,
+        "Crème": 4.00,
+        "Crème de coco": 3.50,
+        "Crème liquide": 4.00,
+        "Crème liquide 35%": 4.50,
+        "Crème montée": 4.00,
+        "Eau": 0.00,
+        "Eau de vie mirabelle": 35.00,
+        "Farine": 1.20,
+        "Farine / Fécule": 1.20,
+        "Farine T45": 1.20,
+        "Farine T55": 1.20,
+        "Fécule": 2.00,
+        "Fruits surgelés": 5.00,
+        "Glucose": 4.50,
+        "Griotte surgelée": 6.00,
+        "Huile d'olive": 8.00,
+        "Jaune d'oeuf": 6.00,
+        "Jus de citron": 3.00,
+        "Jus de citron jaune": 3.00,
+        "Jus de citron vert": 4.00,
+        "Lait": 1.20,
+        "Lait de coco": 2.50,
+                "Levure chimique": 5.00,
+        "Maïzena": 2.50,
+        "Masse gélatine": 30.00,
+        "Menthe": 12.00,
+        "Miel": 10.00,
+        "Noix de coco râpée": 8.00,
+        "Oeuf entier": 5.00,
+                "Orange": 2.00,
+        "Pavot": 18.00,
+        "Pâte d'amande 50%": 12.00,
+        "Pâte de spéculos": 9.00,
+        "Pectine NH": 35.00,
+        "Pépites de chocolat": 14.00,
+        "Poivre timut": 80.00,
+        "Poudre à crème": 4.00,
+        "Poudre d'amande": 14.00,
+        "Poudre de noisette": 16.00,
+        "Poudre pain d'épice": 8.00,
+        "Praliné": 18.00,
+        "Praline cacahuète": 15.00,
+        "Pulpe Yuzu": 40.00,
+                "Purée clémentine": 5.00,
+        "Purée de coco": 3.50,
+        "Purée de mirabelle": 7.00,
+        "Purée de fruits": 6.00,
+        "Purée de passion": 8.00,
+        "Purée framboise": 7.00,
+        "Purée orange sanguine": 5.00,
+        "Purée d'abricot": 5.00,
+        "Rhum": 20.00,
+        "Ricotta": 5.00,
+        "Satilla noir": 18.00,
+        "Sel": 0.80,
+        "Sirop d'agave": 8.00,
+        "Sucre": 1.50,
+        "Sucre / Cassonade": 2.00,
+        "Sucre glace": 2.00,
+        "Sucre inverti": 4.00,
+        "Sucre semoule": 1.50,
+        "Sucre semoule (meringue)": 1.50,
+        "Trimoline": 5.00,
+        "Vanille": 120.00,
+        "Zeste d'agrumes": 5.00,
+        "Zeste de citron": 5.00,
+        "Zeste de citron jaune": 5.00,
+        "Zeste de citron vert": 5.00,
+    ]
+
+    init() {
+        // Load persisted overrides and merge on top of defaults
+        let stored = (UserDefaults.standard.dictionary(forKey: key) as? [String: Double]) ?? [:]
+        var merged = PriceStore.defaults
+        for (k, v) in stored where merged[k] != nil {
+            merged[k] = v
+        }
+        prices = merged
+    }
+
+    // MARK: Public API
+    func price(for ingredient: String) -> Double? {
+        prices[ingredient]
+    }
+
+    func setPrice(_ value: Double?, for ingredient: String) {
+        if let value, value >= 0 {
+            prices[ingredient] = value
+        } else {
+            prices[ingredient] = nil
+        }
+        persist()
+    }
+
+    func costPerKg(for ingredient: String) -> Double? {
+        guard let p = prices[ingredient], p > 0 else { return nil }
+        return p
+    }
+
+    func ingredientCost(name: String, grams: Double) -> Double? {
+        guard let p = costPerKg(for: name) else { return nil }
+        return (grams / 1000.0) * p
+    }
+
+    // MARK: Private
+    private func persist() {
+        // Only save keys that differ from defaults to keep storage lean
+        var diff: [String: Double] = [:]
+        for (k, v) in prices {
+            diff[k] = v
+        }
+        UserDefaults.standard.set(diff, forKey: key)
+    }
+}

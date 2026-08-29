@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recettes Pâtisserie</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo">🍰</div>
+  <div>
+    <h1>Anna App LOL</h1>
+    <p>Ide irhatunk majd barmit</p>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="tab-recettes">Recettes</button>
+  <button class="tab-btn" data-tab="tab-prix">Prix des ingrédients</button>
+  <button class="tab-btn" data-tab="tab-assemblage">Assemblage</button>
+</nav>
+
+<!-- ── Tab 1 : Recettes ── -->
+<main id="tab-recettes" class="tab-panel active">
+
+  <div class="card">
+    <div class="card-title">Sélection de la recette</div>
+    <div class="select-wrapper">
+      <select id="recipeSelect">
+        <option value="">— Choisir une recette —</option>
+      </select>
+    </div>
+    <p class="recipe-meta" id="recipeMeta"></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Masse souhaitée</div>
+    <div class="mass-row">
+      <div class="field">
+        <label for="massInput">Masse totale</label>
+        <input type="number" id="massInput" min="1" step="1" placeholder="ex: 1000" />
+      </div>
+      <div class="unit-badge">g</div>
+    </div>
+  </div>
+
+  <div class="card" id="results">
+    <div class="results-header">
+      <h2 id="resultsTitle">Ingrédients</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Ingrédient</th>
+          <th>Quantité</th>
+          <th id="thPrix" class="col-prix">Prix</th>
+        </tr>
+      </thead>
+      <tbody id="ingredientRows"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td>Masse totale</td>
+          <td id="totalBadge"></td>
+          <td id="totalPrix" class="col-prix"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card" id="emptyState">
+    <div class="empty">
+      <div class="icon">🥣</div>
+      Sélectionnez une recette et entrez une masse pour voir les ingrédients.
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Tab 2 : Prix ── -->
+<main id="tab-prix" class="tab-panel">
+
+  <div class="card">
+    <div class="card-title">Prix des ingrédients <span class="card-title-sub">(€ / kg)</span></div>
+    <div class="search-wrapper">
+      <input type="search" id="ingredientSearch" placeholder="Rechercher un ingrédient…" />
+    </div>
+  </div>
+
+  <div class="card" id="pricesCard">
+    <table id="pricesTable">
+      <thead>
+        <tr>
+          <th>Ingrédient</th>
+          <th>Prix (€/kg)</th>
+        </tr>
+      </thead>
+      <tbody id="pricesRows"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ── Tab 3 : Assemblage ── -->
+<main id="tab-assemblage" class="tab-panel">
+
+  <!-- Add a recipe to the assembly -->
+  <div class="card">
+    <div class="card-title">Ajouter une recette</div>
+    <div class="assembly-add-row">
+      <div class="select-wrapper" style="flex:1">
+        <select id="assemblyRecipeSelect">
+          <option value="">— Choisir une recette —</option>
+        </select>
+      </div>
+      <div class="field assembly-mass-field">
+        <input type="number" id="assemblyMassInput" min="1" step="1" placeholder="Masse (g)" />
+      </div>
+      <button class="add-btn" id="assemblyAddBtn">+ Ajouter</button>
+    </div>
+  </div>
+
+  <!-- List of added recipes -->
+  <div class="card" id="assemblyListCard" style="display:none">
+    <div class="card-title">Recettes sélectionnées</div>
+    <table id="assemblyListTable">
+      <thead>
+        <tr>
+          <th>Recette</th>
+          <th>Masse</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="assemblyListRows"></tbody>
+    </table>
+  </div>
+
+  <!-- Combined result -->
+  <div class="card" id="assemblyResults" style="display:none">
+    <div class="results-header">
+      <h2>Ingrédients combinés</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Ingrédient</th>
+          <th>Quantité totale</th>
+          <th id="assemblyThPrix" class="col-prix">Prix</th>
+        </tr>
+      </thead>
+      <tbody id="assemblyIngredientRows"></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td>Total</td>
+          <td id="assemblyTotalMass"></td>
+          <td id="assemblyTotalPrix" class="col-prix"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="card" id="assemblyEmptyState">
+    <div class="empty">
+      <div class="icon">🎂</div>
+      Ajoutez au moins deux recettes pour voir la liste combinée.
+    </div>
+  </div>
+
+</main>
+
+<script>const RECIPES = [];</script>
+<script src="recipes/appareil_madeleine_concours.js"></script>
+<script src="recipes/biscuit_amande_cacahuete_fabrique.js"></script>
+<script src="recipes/biscuit_brioche_perdue_pavot.js"></script>
+<script src="recipes/biscuit_brownie.js"></script>
+<script src="recipes/biscuit_caramel.js"></script>
+<script src="recipes/biscuit_coco_fabrique.js"></script>
+<script src="recipes/biscuit_cuillere.js"></script>
+<script src="recipes/biscuit_dacquois_cfa.js"></script>
+<script src="recipes/biscuit_de_savoie.js"></script>
+<script src="recipes/biscuit_financier_chocolat_blanc.js"></script>
+<script src="recipes/biscuit_genoise.js"></script>
+<script src="recipes/biscuit_huile_olive_fabrique.js"></script>
+<script src="recipes/biscuit_joconde.js"></script>
+<script src="recipes/biscuit_madeleine_cacao.js"></script>
+<script src="recipes/biscuit_madeleine_cfa.js"></script>
+<script src="recipes/biscuit_moelleux_chocolat.js"></script>
+<script src="recipes/biscuit_moelleux_pain_epice.js"></script>
+<script src="recipes/biscuit_pain_de_genes.js"></script>
+<script src="recipes/biscuit_pate_a_choux_vincent.js"></script>
+<script src="recipes/biscuit_sacher_chocolat_fabrique.js"></script>
+<script src="recipes/biscuit_sacher_chocolat_maison_heler.js"></script>
+<script src="recipes/biscuit_succes.js"></script>
+<script src="recipes/biscuit_viennois.js"></script>
+<script src="recipes/cake_ricotta.js"></script>
+<script src="recipes/caramel_beurre_sale.js"></script>
+<script src="recipes/caramel_beurre_sale_tendre.js"></script>
+<script src="recipes/compote_abricot_citadelle.js"></script>
+<script src="recipes/compote_griotte_fabrique.js"></script>
+<script src="recipes/confit_de_fruits_claire.js"></script>
+<script src="recipes/creme_brulee_gelifiee.js"></script>
+<script src="recipes/creme_choux_mirabelle.js"></script>
+<script src="recipes/creme_damande_fabrique.js"></script>
+<script src="recipes/creme_mousseline_pralinee.js"></script>
+<script src="recipes/creme_patissiere_fabrique.js"></script>
+<script src="recipes/cremeux_2_citrons_fabrique.js"></script>
+<script src="recipes/cremeux_carambar_fabrique.js"></script>
+<script src="recipes/cremeux_caramel_chocolat_fabrique.js"></script>
+<script src="recipes/cremeux_chocolat_timut.js"></script>
+<script src="recipes/cremeux_citron_fabrique.js"></script>
+<script src="recipes/cremeux_coco_fabrique.js"></script>
+<script src="recipes/cremeux_passion.js"></script>
+<script src="recipes/cremeux_speculos_fabrique.js"></script>
+<script src="recipes/cremeux_yuzu.js"></script>
+<script src="recipes/crumble_fabrique.js"></script>
+<script src="recipes/diplomate_coco.js"></script>
+<script src="recipes/flan_choco_coco.js"></script>
+<script src="recipes/flan_fabrique.js"></script>
+<script src="recipes/gelee_rhum_menthe.js"></script>
+<script src="recipes/marmelade_orange_fabrique.js"></script>
+<script src="recipes/namelaka_fruit_chocolat_au_lait.js"></script>
+<script src="recipes/namelaka_fruit_chocolat_blanc.js"></script>
+<script src="recipes/panna_cotta_coco.js"></script>
+<script src="recipes/sable_amandes_torrefiees.js"></script>
+<script src="ingredients/prices.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
